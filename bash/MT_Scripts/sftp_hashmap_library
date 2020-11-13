@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Name: sftp_hashmap_library
+# Function: hash map functions
+# Version: 20130919 
+# Dependency: sftp_load_library 20130909
+# Dependency: sftp_log_library 20130909 
+
+# make sure only root can run script
+if [ `whoami` != "root" ]; then
+        echo "This script must be run as root" 1>&2
+        exit 0
+fi
+
+#########################################
+## setup and check paths and libraries ##
+#########################################
+
+##########################
+## source the libraries ##
+##########################
+
+####################################################
+## declare specific customer processing functions ##
+####################################################
+
+# pfg processing function
+process_pfg_data(){
+
+        # set function variables
+        local user="pguser"
+        local error="0"
+        local index="0"
+        local result="0"
+
+        # count split files 
+        split_count=(count_dir_files $user )
+
+        # set error checking flag and array index
+        local error=0
+        local index=0
+
+	# create a hash table to store the opco to key/value pairs
+	declare -A opco_mt_id
+	opco_mt_id=( ["100"]="15" )
+        opco_mt_id=( ["125"]="13" )
+        opco_mt_id=( ["130"]="234" )
+        opco_mt_id=( ["140"]="237" )
+        opco_mt_id=( ["161"]="238" )
+        opco_mt_id=( ["165"]="235" )
+        opco_mt_id=( ["166"]="239" )
+        opco_mt_id=( ["170"]="236" )
+        opco_mt_id=( ["240"]="240" )
+        opco_mt_id=( ["300"]="241" )
+        opco_mt_id=( ["410"]="242" )
+        opco_mt_id=( ["412"]="243" )
+        opco_mt_id=( ["414"]="233" )
+        opco_mt_id=( ["421"]="244" )
+        opco_mt_id=( ["425"]="231" )
+        opco_mt_id=( ["427"]="230" )
+        opco_mt_id=( ["431"]="17" )	
+	
+	# create a hash table to store the opco to filename key/value pairs
+	declare -A opco_mt_file
+	opco_mt_file=( ["100"]="15_100_pfg_afi.csv" )
+        opco_mt_file=( ["125"]="13_125_pfg_ccounty.csv" )
+        opco_mt_file=( ["130"]="234_130_pfg_hale.csv" )
+        opco_mt_file=( ["140"]="237_140_pfg_lester.csv" )
+        opco_mt_file=( ["161"]="238_161_pfg_middendorf.csv" )
+        opco_mt_file=( ["165"]="235_165_pfg_littlerock.csv" )
+        opco_mt_file=( ["166"]="239_166_pfg_batesville.csv" )
+        opco_mt_file=( ["170"]="236_170_pfg_springfield.csv" )
+        opco_mt_file=( ["240"]="240_240_pfg_powell.csv" )
+        opco_mt_file=( ["300"]="241_300_pfg_empiresf.csv" )
+        opco_mt_file=( ["410"]="242_410_pfg_arizona.csv" )
+        opco_mt_file=( ["412"]="243_412_pfg_dallas.csv" )
+        opco_mt_file=( ["414"]="233_414_pfg_denver.csv" )
+        opco_mt_file=( ["421"]="244_421_pfg_minnesota.csv" )
+        opco_mt_file=( ["425"]="231_425_pfg_nocal.csv" )
+        opco_mt_file=( ["427"]="230_427_pfg_portland.csv" )
+        opco_mt_file=( ["431"]="17_431_pfg_philly.csv" )
+
+}
+
+#################
+## main() code ##
+#################
+
+echo ""
+echo "okay so far"
+echo ""

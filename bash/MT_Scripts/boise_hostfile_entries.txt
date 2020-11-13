@@ -1,0 +1,20 @@
+# For Boise HQ Connections
+# Version: 08.29.13
+
+# localhost name resolution is handled within DNS itself.
+127.0.0.1       localhost
+::1             localhost
+
+# production
+162.209.12.99    prd-sql-001
+162.209.51.95    prd-app-001
+166.78.183.19    prd-utl-001
+
+# staging
+#stg-sql-001
+162.209.89.172    stg-app-001
+
+# development
+162.209.11.86    dev-sql-001
+166.78.241.99    dev-app-001
+

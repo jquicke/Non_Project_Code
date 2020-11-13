@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Name: .my.pass
+# Environment: development
+# Function: provide hidden db passwords for process_pfg_data.sh script
+# Version: 20130923
+
+# Details: install to root home directory (/root). It will be a hidden file with the . prefix in the script name. 
+# Details: set root ownership (chown root:root /root/.my.pass)  and lock it down (chmod 660 /root/.my.pass)
+
+# commented out debug switch
+# set -x
+
+instance dev-sql-001
+dataloader <password>
+dbadmin <password>
+mtadmin <password>

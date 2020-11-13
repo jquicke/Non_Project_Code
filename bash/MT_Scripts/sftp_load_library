@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Name: sftp_load_library
+# Environment: production
+# Function: provides basic libraries for sftp load process
+# Version: 20130913
+# Dependencies: n/a 
+
+# make sure only root can run script
+if [ `whoami` != 'root' ]; then
+        echo "This script must be run as root"
+        return
+fi
+
+# rename dump file sourced load file names to human readable file names
+rename_pfg_files(){
+	local return_value="0"
+	# set temp variable to null; if it changes then error occurred; set return_value to error (1)
+	local rv_temp=""
+	# set rename directory with value passed in function call
+	local rename_dir="$1"
+	
+	if [ -d "$rename_dir" ]; then 
+        	rv_temp=$(mv $rename_dir"100" $rename_dir"pfg_15_100_afifoods.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"125" $rename_dir"pfg_13_125_ccfoods.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"130" $rename_dir"pfg_234_130_hale.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"140" $rename_dir"pfg_237_140_lester.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+	        rv_temp=$(mv $rename_dir"161" $rename_dir"pfg_238_161_middendorf.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"165" $rename_dir"pfg_235_165_littlerock.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"166" $rename_dir"pfg_239_166_batesville.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"170" $rename_dir"pfg_236_170_springfield.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"240" $rename_dir"pfg_240_240_powell.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"300" $rename_dir"pfg_241_300_empire_seafood.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+	        rv_temp=$(mv $rename_dir"410" $rename_dir"pfg_242_410_roma_arizona.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"412" $rename_dir"pfg_243_412_roma_dallas.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"414" $rename_dir"pfg_233_414_roma_denver.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"421" $rename_dir"pfg_244_421_roma_minnesota.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"425" $rename_dir"pfg_231_425_roma_northern_ca.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+	        rv_temp=$(mv $rename_dir"427" $rename_dir"pfg_230_427_roma_portland.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+        	rv_temp=$(mv $rename_dir"431" $rename_dir"pfg_17_431_philadelphia.csv")
+	        if [ -n "$rv_temp" ]; then return_value="1"; fi;
+	else
+		return_value="1"
+	fi	
+	
+	echo "$return_value"
+}
+
+return

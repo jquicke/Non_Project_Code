@@ -1,0 +1,125 @@
+#!/bin/bash
+
+# Name: sftp_log_library
+# Environment: all
+# Function: provides basic libraries for logging and error handling for sftp load process
+# Version: 20130919
+# Dependencies: n/a
+
+# make sure only root can run script
+if [ `whoami` != 'root' ]; then
+        echo "This script must be run as root"
+        return
+fi
+
+# create logging variables
+set_log_varables(){
+        LOG_DIR="/var/log/dataload/"
+	LOG=$(date +%Y%m%d%H%M)
+	FILE="sftp_log."
+	LOG_FILE=$(echo $FILE$LOG)
+        LOL_DB_USER="log_user"
+        LOG_DB_HOST="dev-sql-001"
+        LOG_DB="loadlogs"
+}
+
+log_interval(){
+	local interval=$(date +%Y%m%d%H%M%S)
+	echo "$interval"
+}
+
+# log start message to /var/log and start timer
+log_enter(){
+	local call_script="$1"
+	export start_seconds=$(date +%s)
+	local log_message="starting up logging library for $call_script"
+        echo "$(date +%Y%m%d%H%M%S)	Start:	$log_message" >> $LOG_DIR$LOG_FILE
+}
+
+# log end message to /var/log and end timer
+log_exit(){
+	local call_script="$1"
+	local notify_list="$2"
+        local exit_condition="$3"
+	local end_seconds=$(date +%s)
+	local interval_seconds=$(($end_seconds - $start_seconds))
+	
+	if [ $interval_seconds -ge 3600 ]; then
+        	elapsed_hours=$(($interval_seconds / 3600))
+	        hours_mod=$(($interval_seconds % 3600))
+        	if [ hours_mod = 1 ]; then
+                	elapsed_minutes=0
+	        else
+        	        elapsed_minutes=$(($hours_mod / 60))
+                	elapsed_seconds=$(($interval_seconds % 60))
+	        fi
+	else
+        	if [ $interval_seconds -ge 60 ]; then
+                	elapsed_hours=0
+	                elapsed_minutes=$(($interval_seconds / 60))
+        	        elapsed_seconds=$(($interval_seconds % 60))
+	        else
+        	        elapsed_hours=0
+                	elapsed_minutes=0
+	                elapsed_seconds=$interval_seconds
+        	fi
+	fi
+
+	if [ $exit_condition -gt 0 ]; then
+		local log_message="$call_script failed after $elapsed_hours hours $elapsed_minutes minutes and $elapsed_seconds seconds" 
+		local mail_subject="$call_script failed at `date +%Y%m%d%H%M%S` with errors
+		echo "$(date +%Y%m%d%H%M%S)     END:   $log_message" >> $LOG_DIR$LOG_FILE
+		mail -s "$mail_subject" $notify_list < $LOG_DIR$LOG_FILE
+		exit 1		
+	else
+		local log_message="$call_script completed after $elapsed_hours hours $elapsed_minutes minutes and $elapsed_seconds seconds" 
+		local mail_subject="$call_script completed at `date +%Y%m%d%H%M%S` without errors
+		echo "$(date +%Y%m%d%H%M%S)     END:   $log_message" >> $LOG_DIR$LOG_FILE
+		mail -s "$mail_subject" $notify_list < $LOG_DIR$LOG_FILE
+		exit 0
+	fi
+}
+
+# log info message to /var/log
+log_info(){
+        local log_message="$@"
+        echo "$(date +%Y%m%d%H%M%S)	Info:	$log_message" >> $LOG_DIR$LOG_FILE
+}
+
+# log warning message to /var/log
+log_warn(){
+        local log_message="$@"
+        echo "$(date +%Y%m%d%H%M%S)	Warning:	$log_message" >> $LOG_DIR$LOG_FILE
+}
+
+# log error message to /var/log
+log_error(){
+        local log_message="$@"
+        echo "$(date +%Y%m%d%H%M%S)	Error:	$log_message" >> $LOG_DIR$LOG_FILE
+}
+
+# log debug message to /var/log
+log_debug(){
+        local log_message="$@"
+        echo "$(date +%Y%m%d%H%M%S)	Debug:	$log_message" >> $LOG_DIR$LOG_FILE
+}
+
+# log "should never happen" message to /var/log
+log_wtf(){
+        local log_message="$@"
+        echo "$(date +%Y%m%d%H%M%S)	WTF:	$log_message" >> $LOG_DIR$LOG_FILE
+}
+
+# mail alerts to staff
+mail_alert(){
+        local call_script="$1"
+	local notify_list="$2"
+        local alert_subject="$3"
+	local alert_body="$4"
+        echo "$alert_body" | mail -s "$alert_subject" $notify_list
+}
+
+# export variables
+export LOG_FILE LOG_DB_USER LOG_DB_USER_PASSWD LOG_DB_HOST LOG_DB
+
+return

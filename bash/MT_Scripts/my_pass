@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Name: .my_pass
+# Environment: dev
+# Function: provide hidden db passwords for process_pfg_data.sh script
+# Author: jquicke@opxdev.com
+# Version: 20130923
+
+# Details: install to /mnt/automation/property_files directory. It will be a hidden file with the . prefix in the script name. 
+# Details: set root ownership (chown root:opsuser .my_pass)  and lock it down (chmod 640 .my_pass)
+
+# commented out debug switch
+# set -x
+
+instance dev-sql-001
+dataloader <password>
+dbadmin <password>
+mtadmin <password>
